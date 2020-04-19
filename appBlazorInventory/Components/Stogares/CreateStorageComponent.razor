@@ -1,0 +1,79 @@
+﻿@using Entities
+@using Business
+
+@inject B_Product bProducts
+@inject B_Warehouse bWarehouse
+@inject B_Storage bStorage
+@inject NavigationManager navmanager
+
+<EditForm Model="oStorage">
+    <div class="container">
+
+        <div class="form-group">
+            <label>Bodega:</label>
+            <InputSelect @bind-Value="oStorage.WarehouseId" class="form-control">
+                <option>Seleccione Almacen...</option>
+                @foreach (var item in warehouses)
+                {
+                    <option value="@item.WarehouseId">@item.WarehouseName</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label>Producto:</label>
+            <InputSelect @bind-Value="oStorage.ProductId" class="form-control">
+                <option>Seleccione Producto...</option>
+                @foreach (var item in products)
+                {
+                    <option value="@item.ProductId">@item.ProductName</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <button @onclick="SaveStorage" class="btn btn-info">
+                <span class="oi oi-task" aria-hidden="true"></span> Almacenar Producto
+            </button>
+
+        </div>
+    </div>
+</EditForm>
+
+<div class="text-center">
+    @message
+</div>
+
+
+@code {
+
+    StorageEntity oStorage = new StorageEntity();
+
+    List<WarehouseEntity> warehouses = new List<WarehouseEntity>();
+    List<ProductEntity> products = new List<ProductEntity>();
+    string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        warehouses = bWarehouse.WarehouseList();
+        products = bProducts.ProductList();
+    }
+
+    private void SaveStorage()
+    {
+        oStorage.StorageId = $"{oStorage.WarehouseId}-{oStorage.ProductId}";
+
+        if (!bStorage.IsProductInWarehouse(oStorage.StorageId))
+        {
+            oStorage.LastUpdate = DateTime.Now;
+            bStorage.CreateStorage(oStorage);
+            message = "Producto Registrado";
+        }
+        else
+        {           
+            message = "Producto ya existe en la bodega";
+        }
+               
+    }
+
+}

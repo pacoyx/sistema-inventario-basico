@@ -1,0 +1,52 @@
+﻿@using Entities
+@using Business
+@inject B_Warehouse bWarehouse
+@inject NavigationManager navmanager
+
+
+<div class="container">
+    <EditForm Model="oWarehouse">
+        <div class="form-group">
+            <label>Codigo Almacen:</label>
+            <InputText @bind-Value="oWarehouse.WarehouseId" class="form-control" disabled="true" />
+        </div>
+
+        <div class="form-group">
+            <label>Nombre Almacen:</label>
+            <InputText @bind-Value="oWarehouse.WarehouseName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Direccion Almacen:</label>
+            <InputText @bind-Value="oWarehouse.WarehouseAddress" class="form-control" />
+        </div>
+
+        @*<input type="button" value="Agregar Almacen" @onclick="SaveWarehouse" class="btn btn-info" />*@
+
+        <button value="Agregar Almacen" @onclick="SaveWarehouse" class="btn btn-info">
+            <span class="oi oi-task" aria-hidden="true"></span> Agregar Almacen
+        </button>
+
+    </EditForm>
+
+</div>
+
+
+
+
+@code {
+
+    WarehouseEntity oWarehouse = new WarehouseEntity();
+
+    protected override async Task OnInitializedAsync()
+    {
+        oWarehouse.WarehouseId = Guid.NewGuid().ToString();
+    }
+
+    private void SaveWarehouse()
+    {
+        bWarehouse.CreateWarehouse(oWarehouse);
+        navmanager.NavigateTo("warehouse/list");
+    }
+
+}

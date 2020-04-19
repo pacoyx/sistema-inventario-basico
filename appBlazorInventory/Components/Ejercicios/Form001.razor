@@ -1,0 +1,15 @@
+﻿<h3>Form001</h3>
+
+<input type="text" @bind-value="@mensaje"/>
+
+<input type="button"  value="Cambiar texto" @onclick="cambiar"/>
+
+@code {
+    string mensaje = "Hola mundo";
+
+    void cambiar()
+    {
+        mensaje = "cambio el texto";
+    }
+
+}

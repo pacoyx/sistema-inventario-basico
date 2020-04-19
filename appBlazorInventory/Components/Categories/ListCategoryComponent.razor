@@ -1,0 +1,56 @@
+﻿@using Entities
+@using Business
+@inject B_Category bCategory
+
+
+
+
+<div class="container">
+
+    <hr />
+   <a href="category/create">Crear Categoria</a>
+    <hr />
+
+    <div class="row">
+        <div class="col">
+            Codigo Categoria
+        </div>
+        <div class="col">
+            Nombre Categoria
+        </div>
+
+    </div>
+
+
+    @foreach (var item in Categories)
+    {
+<div class="row">
+    <div class="col">
+        @item.CategoryId
+    </div>
+    <div class="col">
+        @item.CategoryName
+    </div>
+    <div class="col">
+        <a href="category/update/@item.CategoryId">Editar</a>
+    </div>
+</div>
+    }
+
+
+</div>
+
+
+
+@code {
+
+    List<CategoryEntity> Categories = new List<CategoryEntity>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = bCategory.CategoryList();
+    }
+
+
+}
